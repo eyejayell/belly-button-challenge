@@ -46,14 +46,36 @@ function buildCharts(dog) {
         console.log(result);
 
         let layoutBar = {
-            
+            title: "Top 10 OTUs Found in Individual",
         }
 
         let dataBar = {
+            x: result.sample_values.slice(0,10).reverse(),
+            y: result.otu_ids.slice(0,10).map(id => `OTU${id}`).reverse(),
+            type: "bar",
+            text: result.otu_labels.slice(0,10).reverse(),
+            orientation: "h"
 
         }
 
         Plotly.newPlot("bar", [dataBar], layoutBar);
+
+        let layoutBubble = {
+
+        }
+
+        let dataBubble = {
+            x: result.otu_ids,
+            y: result.sample_values,
+            text: result.otu_labels,
+            mode: "markers",
+            marker: {
+                size: result.sample_values,
+                color: result.otu_ids,
+            }
+        }
+
+        Plotly.newPlot("bubble", [dataBubble], layoutBubble)
     })
 
 }
@@ -68,7 +90,9 @@ function buildMetadata(cat) {
 
         let PANEL = d3.select("#sample-metadata");
         PANEL.html("");
-        
+        Object.entries(result).forEach(([key, value]) => {
+            PANEL.append('h6').text(`${key}: ${value}`);
+        })
         
     })
 }
